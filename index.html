@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kassir — qaytim oʻyini</title>
+<style>
+:root{--bg:#dfeae6;--wall:#cfe0da;--shelf:#a9c2ba;--counter:#8a5a35;--counter2:#6e4526;--card:#fff;--ink:#12302f;--muted:#5d7774;--line:#bcd0ca;--acc:#ff8a3d;--acc-ink:#2a1200;--ok:#1d7a44;--bad:#c0392b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10201f;--wall:#17302e;--shelf:#27463f;--card:#1c2f2d;--ink:#e8f3f0;--muted:#97b3ae;--line:#2f4b47;--ok:#4cc27d;--bad:#ff7b6e}}
+:root[data-theme="dark"]{--bg:#10201f;--wall:#17302e;--shelf:#27463f;--card:#1c2f2d;--ink:#e8f3f0;--muted:#97b3ae;--line:#2f4b47;--ok:#4cc27d;--bad:#ff7b6e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:700}
+main{max-width:520px;margin:0 auto;padding:10px}
+#hud{display:flex;justify-content:space-between;align-items:center;font-size:15px;padding:4px 2px 8px}
+#hud b{font-size:19px}
+#scene{position:relative;height:210px;border-radius:16px;overflow:hidden;background:linear-gradient(var(--wall) 0 100%);border:2px solid var(--line)}
+.shelf{position:absolute;left:0;right:0;height:10px;background:var(--shelf)}
+.shelf.a{top:46px}.shelf.b{top:96px}
+.boxes{position:absolute;top:20px;left:12px;right:12px;font-size:26px;letter-spacing:10px;opacity:.55;white-space:nowrap;overflow:hidden}
+.boxes.b{top:70px}
+#cust{position:absolute;left:50%;bottom:50px;transform:translateX(-50%);font-size:78px;line-height:1;animation:in .5s ease-out}
+@keyframes in{from{transform:translate(-160%,0);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+#mood{position:absolute;left:calc(50% + 34px);bottom:108px;font-size:28px}
+#bubble{position:absolute;left:8px;top:8px;max-width:58%;background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:7px 10px;font-size:14px;z-index:2}
+.pat{position:absolute;right:10px;top:10px;width:38%;height:10px;border-radius:6px;background:var(--line);overflow:hidden;z-index:2}
+.pat i{display:block;height:100%;width:100%;background:var(--ok)}
+.counter{position:absolute;left:0;right:0;bottom:0;height:52px;background:linear-gradient(var(--counter),var(--counter2))}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:10px;margin-top:10px}
+.sub{color:var(--muted);font-size:13px;font-weight:600}
+.items{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.it{font-size:30px;line-height:1;border:2px solid var(--ink);background:var(--card);border-radius:12px;padding:8px 10px;min-width:70px;text-align:center;cursor:pointer;color:var(--ink);font-family:inherit}
+.it small{display:block;font-size:12px;font-weight:700;margin-top:3px}
+.it.done{opacity:.35;border-style:dashed;cursor:default}
+.line{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
+.total{border-top:2px solid var(--ink);margin-top:4px;padding-top:6px;font-size:20px}
+.note{display:inline-flex;align-items:center;justify-content:center;min-width:64px;height:36px;border-radius:6px;border:2px solid rgba(0,0,0,.45);color:#15221f;font-size:13px;font-weight:800;padding:0 6px;font-family:inherit;box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}
+button.note{cursor:pointer}
+button.note:disabled{opacity:.35;cursor:not-allowed}
+.till{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:6px}
+.tray{min-height:46px;display:flex;flex-wrap:wrap;gap:5px;margin:8px 0;padding:6px;border-radius:10px;background:var(--bg);border:2px dashed var(--line)}
+.btns{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+button.act{font-family:inherit;font-weight:800;font-size:16px;border-radius:12px;border:2px solid var(--ink);background:var(--card);color:var(--ink);padding:13px;cursor:pointer}
+button.act.go{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+button.act:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#msg{min-height:22px;font-size:15px;margin-top:8px;text-align:center}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.over{text-align:center;padding:26px 10px}
+.over h2{font-size:26px;margin:6px 0}
+.pos{display:flex;justify-content:space-between;align-items:center;background:#0f1d1b;color:#8dffb0;border-radius:10px;padding:10px 14px;font-size:22px;margin:8px 0}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+button.key{font-family:inherit;font-weight:800;font-size:22px;padding:12px;border-radius:10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+@media (prefers-reduced-motion:reduce){#cust{animation:none}}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<main>
+<div id="hud"></div>
+<div id="scene">
+  <div class="shelf a"></div><div class="boxes">📦🧱🪣📦🔨🧰📦🪜</div>
+  <div class="shelf b"></div><div class="boxes b">🧰🪣📦💡🧱📦🔧🪚</div>
+  <div id="bubble"></div><div class="pat"><i id="pb"></i></div>
+  <div id="cust"></div><div id="mood"></div>
+  <div class="counter"></div>
+</div>
+<div id="msg" aria-live="polite"></div>
+<div id="play"></div>
+</main>
+<script>
+const IT=[{e:"🧱",n:"Gisht",p:3000},{e:"🪣",n:"Boʻyoq",p:25000},{e:"🔨",n:"Bolgʻa",p:18000},{e:"💡",n:"Lampa",p:7000},{e:"🪜",n:"Narvon",p:45000},{e:"🔧",n:"Kalit",p:12000},{e:"🪚",n:"Arra",p:22000},{e:"🧤",n:"Qoʻlqop",p:5000},{e:"📏",n:"Metr",p:6000},{e:"🪛",n:"Otvyortka",p:9000},{e:"🔩",n:"Murvat",p:2000},{e:"🧰",n:"Asboblar qutisi",p:60000},{e:"🔌",n:"Kabel",p:15000},{e:"🔦",n:"Fonar",p:14000},{e:"🧴",n:"Yelim",p:8000},{e:"🧹",n:"Supurgi",p:6000},{e:"🪵",n:"Taxta",p:20000},{e:"🧯",n:"Oʻt oʻchirgich",p:50000},{e:"🪞",n:"Oyna",p:40000},{e:"⛏️",n:"Kirka",p:28000},{e:"🚿",n:"Dush",p:55000},{e:"🚰",n:"Kran",p:35000},{e:"🪨",n:"Sement qopi",p:55000},{e:"🪟",n:"Deraza",p:90000},{e:"🚪",n:"Eshik",p:120000},{e:"🎨",n:"Choʻtka",p:7000},{e:"📐",n:"Burchak",p:11000}];
+const NOTES=[1000,2000,5000,10000,20000,50000,100000,200000];
+const COL={1000:"#a9c9ac",2000:"#d4ad84",5000:"#bba3de",10000:"#f2a9bf",20000:"#86b9ea",50000:"#dc93d4",100000:"#95d695",200000:"#ebcc78"};
+const FACES=["🧑‍🔧","👷","👩‍🔧","🧔","👵","👨‍🌾","👩‍🦰","👴"];
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString("ru-RU").replace(/\u00a0/g," ")+" soʻm";
+const short=n=>n>=1000?(n/1000)+" ming":n;
+const sum=a=>a.reduce((x,y)=>x+y,0);
+let G=null,best=0,tm=null,ac=null;
+function beep(f){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f||880;g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.08)}catch(e){}}
+function start(){G={score:0,lives:3,level:1,served:0,streak:0};nextCust()}
+function nextCust(){
+  clearInterval(tm);
+  const n=1+Math.floor(Math.random()*Math.min(2+Math.floor(G.level/2),5));
+  let items,total;
+  do{items=Array.from({length:n},()=>({...IT[Math.floor(Math.random()*IT.length)],ok:false}));total=sum(items.map(i=>i.p))}while(total>=190000);
+  const big=NOTES.filter(x=>x>total);let paid=big[0];if(big[1]&&Math.random()<.4)paid=big[1];
+  const card=Math.random()<Math.min(.2+G.level*.05,.5);Object.assign(G,{items,total,paid,card,decline:card&&Math.random()<.2,typed:"",phase:"scan",tray:[],face:FACES[Math.floor(Math.random()*FACES.length)],t:Math.max(20,48-G.level*4)});
+  G.max=G.t;$("msg").textContent="";render();
+  tm=setInterval(()=>{G.t-=.2;bar();if(G.t<=0)fail("Haridor sabrsiz boʻlib ketdi!")},200);
+}
+function bar(){const r=Math.max(0,G.t/G.max);$("pb").style.width=r*100+"%";$("pb").style.background=r>.5?"var(--ok)":r>.25?"#e0a800":"var(--bad)";$("mood").textContent=r>.5?"😊":r>.25?"😐":"😠"}
+function scan(i){if(G.phase!=="scan"||G.items[i].ok)return;G.items[i].ok=true;beep(900);if(G.items.every(x=>x.ok))G.phase="pay";render()}
+function add(v){if(G.phase==="pay"){G.tray.push(v);beep(500);render()}}
+function clr(){G.tray=[];render()}
+function key(k){if(G.phase!=="pay"||!G.card)return;beep(500);if(k==="d")G.typed=G.typed.slice(0,-1);else if((G.typed+k).length<=7)G.typed+=k;render()}
+function pos(){
+  if(+G.typed!==G.total)return fail("Terminalga notoʻgʻri summa kiritildi! Toʻgʻri: "+fmt(G.total));
+  if(G.decline){G.decline=false;G.card=false;G.typed="";beep(200);flash("Karta rad etildi! Haridor naqd toʻlaydi.","bad");render();return}
+  clearInterval(tm);G.served++;G.streak++;const pts=80+Math.round(G.t*3)+G.streak*20;G.score+=pts;if(G.served%4===0)G.level++;
+  flash("Toʻlov qabul qilindi! +"+pts,"ok");beep(1200);G.phase="wait";render();setTimeout(nextCust,1100);
+}
+function POS(){return `<div class="card"><div class="sub">Terminal: jami summani kiriting</div><div class="pos"><span>💳</span><b>${G.typed?fmt(+G.typed):"0 soʻm"}</b></div><div class="keys">${["1","2","3","4","5","6","7","8","9","000","0","d"].map(k=>`<button class="key" onclick="key('${k}')">${k==="d"?"⌫":k}</button>`).join("")}</div><button class="act go" style="width:100%;margin-top:8px" ${G.typed?"":"disabled"} onclick="pos()">TOʻLOVNI OLISH</button></div>`}
+function give(){
+  const need=G.paid-G.total,s=sum(G.tray);
+  if(s===need){
+    clearInterval(tm);G.served++;G.streak++;
+    const pts=100+Math.round(G.t*3)+G.streak*20;G.score+=pts;
+    if(G.served%4===0)G.level++;
+    flash("Toʻgʻri! +"+pts,"ok");beep(1200);G.phase="wait";render();setTimeout(nextCust,1100);
+  }else fail("Xato! Toʻgʻri qaytim: "+fmt(need)+". Siz: "+fmt(s));
+}
+function flash(t,c){$("msg").innerHTML=`<span class="${c}">${t}</span>`}
+function fail(t){
+  clearInterval(tm);G.lives--;G.streak=0;flash(t,"bad");beep(200);G.phase="wait";render();
+  if(G.lives<=0){best=Math.max(best,G.score);setTimeout(()=>{G.phase="over";render()},1500)}else setTimeout(nextCust,1600);
+}
+function render(){
+  $("hud").innerHTML=G?`<span>Ball: <b>${G.score}</b></span><span>Daraja: <b>${G.level}</b></span><span>${"❤️".repeat(G.lives)||"💔"}</span>`:"<span>Kassir</span>";
+  const p=$("play");
+  if(!G){$("cust").textContent="🛒";$("bubble").textContent="Xush kelibsiz!";p.innerHTML=`<div class="card over"><h2>Kassir oʻyini</h2><p class="sub">Haridor tanlagan mahsulotlarni skanerlang (ustiga bosing), jami narxni hisoblang va ortiqcha pulni aniq qaytim qilib bering. Haridor karta bilan toʻlasa, terminalga jami summani kiriting. Ba’zan karta rad etiladi, u holda naqd qaytim bering. Haridor sabrsiz boʻlmasin!</p><button class="act go" style="width:100%" onclick="start()">BOSHLASH</button></div>`;return}
+  if(G.phase==="over"){$("cust").textContent="🏪";$("mood").textContent="";$("bubble").textContent="Doʻkon yopildi";p.innerHTML=`<div class="card over"><h2>Oʻyin tugadi</h2><p>Ball: <b>${G.score}</b> · Xizmat: <b>${G.served}</b> ta<br>Rekord: <b>${best}</b></p><button class="act go" style="width:100%" onclick="start()">QAYTA OʻYNASH</button></div>`;return}
+  $("cust").textContent=G.face;
+  $("bubble").innerHTML=G.phase==="pay"?(G.card?"Karta bilan toʻlayman 💳":`Mana, ${fmt(G.paid)}`):G.phase==="wait"?"Rahmat!":"Mana shu narsalar.";
+  bar();
+  const scanned=G.items.filter(i=>i.ok),pay=G.phase==="pay",ts=sum(G.tray);
+  p.innerHTML=`<div class="card"><div class="sub">${pay?"Hammasi skanerlandi":"Mahsulotni skanerlash uchun bosing"}</div>
+  <div class="items">${G.items.map((x,i)=>`<button class="it ${x.ok?"done":""}" onclick="scan(${i})" aria-label="${x.n}">${x.e}<small>${x.ok?"✓":x.n}</small></button>`).join("")}</div></div>
+  <div class="card">${scanned.map(x=>`<div class="line"><span>${x.e} ${x.n}</span><span>${fmt(x.p)}</span></div>`).join("")||'<div class="sub">Chek boʻsh</div>'}
+  <div class="line total"><span>Jami</span><span>${fmt(sum(scanned.map(x=>x.p)))}</span></div>
+  ${pay&&!G.card?`<div class="line"><span>Haridor berdi</span><span class="note" style="background:${COL[G.paid]}">${short(G.paid)}</span></div><div class="line"><span>Qaytim kerak</span><b>?</b></div>`:""}</div>
+  ${pay&&G.card?POS():""}<div class="card" style="${pay&&G.card?"display:none":""}"><div class="sub">Kassa: qaytim uchun pul bosing</div>
+  <div class="till">${NOTES.slice(0,7).map(v=>`<button class="note" ${pay?"":"disabled"} style="background:${COL[v]}" onclick="add(${v})">${short(v)}</button>`).join("")}</div>
+  <div class="tray">${G.tray.map(v=>`<span class="note" style="background:${COL[v]}">${short(v)}</span>`).join("")||'<span class="sub">Qaytim shu yerga tushadi</span>'}</div>
+  <div class="line"><span>Berilmoqda:</span><b>${fmt(ts)}</b></div>
+  <div class="btns"><button class="act" ${pay&&G.tray.length?"":"disabled"} onclick="clr()">Tozalash</button><button class="act go" ${pay&&G.tray.length?"":"disabled"} onclick="give()">QAYTIM BERISH</button></div></div>`;
+}
+try{const T=window.Telegram&&window.Telegram.WebApp;if(T){T.ready();T.expand();if(T.disableVerticalSwipes)T.disableVerticalSwipes()}}catch(e){}
+render();
+</script>
+</body>
+</html>
